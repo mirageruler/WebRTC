@@ -1,0 +1,5 @@
+bucket         = "cjc-terraform-01d0jipp99"
+profile        = "voconic-dwv003"
+region         = "ap-southeast-1"
+kms_key_id     = "f81b801c-c5d3-4af5-bad6-758539ef98b7"
+dynamodb_table = "tf-remote-state-lock"

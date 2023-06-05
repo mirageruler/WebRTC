@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: offerer
+  namespace: webrtc-test1-differ-nodes-with-turn
+  labels:
+    app: cjc
+    svc: offerer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cjc
+      svc: offerer
+  template:
+    metadata:
+      labels:
+        app: cjc
+        svc: offerer
+    spec:
+     # nodeSelector:
+        # nodegroup: offerer
+      #  eks.amazonaws.com/nodegroup: dev-ng-offerer-20230420080850066300000021
+      containers:
+      - name: offerer
+        image: 390671053954.dkr.ecr.us-east-1.amazonaws.com/webrtc_test_1:2.3
+      #   command: ["offer"]
+      #   args:
+      #   - "-answer-address"
+      #   - "http://answerer:60000"
+      #   - "-bucket-name"
+      #  # - "${aws_s3_bucket.test_1.bucket}"
+      #   - "webrtc-with-turn"
+      #   - "turn-addr"
+      #   - "10.0.1.148:3478"
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - "sleep infinity"
+        ports:
+        - containerPort: 50000
+          name: http
+        envFrom:
+        - secretRef: 
+            name: aws-credentials
+        resources:
+          requests:
+            cpu: "7500m"
+            memory: "29Gi"
+          limits:
+            cpu: "7500m"
+            memory: "29Gi"
+        imagePullPolicy: Always
+      restartPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: offerer
+  namespace: webrtc-test1-differ-nodes-with-turn
+  labels:
+    app: cjc
+    svc: offerer
+spec:
+  type: LoadBalancer
+  selector:
+    svc: offerer
+  ports:
+    - name: http
+      port: 50000
+      targetPort: 50000

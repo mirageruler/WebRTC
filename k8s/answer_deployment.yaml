@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: answerer
+  namespace: webrtc-test1-differ-nodes-with-turn
+  labels:
+    app: cjc
+    svc: answerer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cjc
+      svc: answerer
+  template:
+    metadata:
+      labels:
+        app: cjc
+        svc: answerer
+    spec:
+      nodeSelector:
+        nodegroup: answerer
+       # eks.amazonaws.com/nodegroup: dev-ng-answerer-2023042008085006610000001d
+      containers:
+        - name: answerer
+          image: 390671053954.dkr.ecr.us-east-1.amazonaws.com/webrtc_test_1:2.3
+          command: ["answer"]
+          args:
+            - "-offer-address"
+            - "http://offerer:50000"
+            - "-bucket-name"
+           # - "${aws_s3_bucket.test_1.bucket}"
+            - "webrtc-with-turn"
+            - "-turns"
+            - "3.86.11.61:3478"
+          ports:
+            - containerPort: 60000
+              name: http
+          envFrom:
+          - secretRef: 
+              name: aws-credentials
+          resources:
+            limits:
+              cpu: "7500m"
+              memory: "29Gi"
+            requests:
+              cpu: "7500m"
+              memory: "29Gi"      
+          imagePullPolicy: Always
+      restartPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: answerer
+  namespace: webrtc-test1-differ-nodes-with-turn
+  labels:
+    app: cjc
+    svc: answerer
+spec:
+  ports:
+    - name: http
+      port: 60000
+      targetPort: 60000
+  type: LoadBalancer
+  selector:
+    svc: answerer

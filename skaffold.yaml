@@ -1,0 +1,16 @@
+apiVersion: skaffold/v3
+kind: Config
+metadata:
+  name: offer
+build: 
+  artifacts:
+  - image: 390671053954.dkr.ecr.us-east-1.amazonaws.com/webrtc_test_1
+    context: .
+    docker:
+      dockerfile: Dockerfile
+
+manifests:
+ rawYaml:
+ - k8s/*.yaml
+deploy:
+ kubectl: {}

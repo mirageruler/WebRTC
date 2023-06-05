@@ -1,0 +1,34 @@
+version: '3'
+services:
+  answer:
+    container_name: answer
+    image: "webrtc:1.1"
+    # build: ./cmd/answer
+    ports:
+      - 50000:50000
+    command: answer -offer-address offer:50000
+    networks:
+      - answer-net
+      - shared_network
+
+
+  offer:
+    container_name: offer
+    image: "webrtc:1.1"
+    # build: ./cmd/offer
+    ports:
+      - 60000:60000
+    command: offer -answer-address answer:60000
+    networks:
+      - offer-net
+      - shared_network
+    depends_on:
+      - answer
+
+networks:
+  answer-net:
+    driver: bridge
+  offer-net:
+    driver: bridge
+  shared_network:
+    external: true
