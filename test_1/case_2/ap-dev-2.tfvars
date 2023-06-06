@@ -38,7 +38,7 @@ bucket                                 = "cjc-terraform-test1-case2"
 profile                                = "voconic-dwv003"
 turn_port = 3478
 
-AWS_KEY_ID="AKIAVV5OPGSBI6SIU7TI"
-AWS_SECRET_KEY="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"
-AWS_REGION="us-east-1"
+AWS_KEY_ID                  = "AWS_KEY_ID"
+AWS_SECRET_KEY              = "AWS_SECRET_KEY"
+AWS_REGION                  = "AWS_REGION"
 bucket_name="webrtc-with-turn"
