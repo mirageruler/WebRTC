@@ -24,4 +24,4 @@ RUN apk update \
  && apk add --no-cache \
         ca-certificates cmake g++ git make \
  && update-ca-certificates \
- && apk add vim
+ && apk add vim# WebRTC
